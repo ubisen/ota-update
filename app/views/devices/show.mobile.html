@@ -1,0 +1,56 @@
+{% extends '../layouts/mobile.html' %}
+
+{% block main %}
+  <h1>{{ device.name }}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-8">
+      <p>{{ device.body }}</p>
+      <div class="meta">
+        {% if (device.user) %}
+          {% if (device.user.name) %}
+            {% set name = device.user.name %}
+          {% else %}
+            {% set name = device.user.username %}
+          {% endif %}
+
+          <a href="{{ '/users/' + device.user._id }}">{{ name }}</a>
+        {% endif %}
+        {% if (device.tags) %}
+          <p>Tags &nbsp;</p>
+          {% for tag in device.tags.split(',') %}
+            <i class="muted fa fa-tag"></i>&nbsp;
+            <a href="{{ '/tags/' + tag }}" class="tag">{{ tag }}</a>
+            &nbsp;&nbsp;
+          {% endfor %}
+        {% endif %}
+
+        <span class="muted">{{ device.createdAt.toISOString()|date('M d, Y  h:m a') }}</span>
+      </div>
+    </div>
+    <div class="col-md-4">
+      {% if (!device.isNew && device.image && device.image.files && device.image.files.length) %}
+        <img src="{{ device.image.cdnUri + '/mini_' + device.image.files[0] }}" alt="">
+      {% endif %}
+    </div>
+  </div>
+
+  <form action="{{ '/devices/' + device.id }}" method="post" onsubmit="return confirm('Are you sure?')">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <a href="{{ '/devices/' + device._id + '/edit' }}" title="edit" class="btn btn-default">
+      Edit
+    </a>
+    &nbsp;
+    <input type="hidden" name="_method" value="DELETE">
+    <button class="btn btn-danger" type="submit">Delete</button>
+  </form>
+
+  <br>
+  <h3>Comments</h3>
+  {% for comment in device.comments %}
+    {% include '../comments/comment.html' %}
+  {% endfor %}
+  {% include '../comments/form.html' %}
+{% endblock %}

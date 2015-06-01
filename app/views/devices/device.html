@@ -1,0 +1,28 @@
+<div class="device">
+  <h3>
+    <a href="{{ '/devices/' + device._id }}" title="{{ device.name }}">
+      {{ device.name }}
+    </a>
+  </h3>
+  <p>{{ device.body }}</p>
+
+  <span class="muted">{{ device.createdAt.toISOString()|date('M d, Y  h:m a') }}</span>
+
+  {% if (device.user) %}
+    &nbsp; - &nbsp;
+    <span>Author: </span>
+    <a href="{{ '/users/' + device.user._id }}">
+      {{ device.user.name || device.user.username }}
+    </a>
+  {% endif %}
+
+  {% if (device.tags) %}
+    &nbsp; - &nbsp;
+    <span>Tags: </span>
+    {% for tag in device.tags.split(',') %}
+      <i class="muted fa fa-tag"></i>&nbsp;
+      <a href="{{ '/tags/' + tag }}" class="tag">{{ tag }}</a>
+      &nbsp;&nbsp;
+    {% endfor %}
+  {% endif %}
+</div>
