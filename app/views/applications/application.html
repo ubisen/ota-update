@@ -1,0 +1,27 @@
+<div class="application">
+  <h3>
+    <a href="{{ '/applications/' + application._id }}" title="{{ application.name }}">
+      {{ application.name }}
+    </a>
+  </h3>
+  <p>{{ application.description }}</p>
+
+  <span class="muted">{{ application.createdAt.toISOString()|date('M d, Y  h:m a') }}</span>
+
+  {% if (application.user) %}
+    &nbsp; - &nbsp;
+    <span>Author: </span>
+    <a href="{{ '/users/' + application.user._id }}">
+      {{ application.user.name || application.user.username }}
+    </a>
+  {% endif %}
+  {% if (application.tags) %}
+    &nbsp; - &nbsp;
+    <span>Tags: </span>
+    {% for tag in application.tags.split(',') %}
+      <i class="muted fa fa-tag"></i>&nbsp;
+      <a href="{{ '/tags/' + tag }}" class="tag">{{ tag }}</a>
+      &nbsp;&nbsp;
+    {% endfor %}
+  {% endif %}
+</div>

@@ -1,0 +1,41 @@
+<h4 class="text-center">Add new version</h4>
+
+<form class="form-horizontal" method="post" action="{{ '/applications/' + application._id + '/versions' }}" role="form">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Value</label>
+    <div class="col-sm-10">
+      <input type="text" name="value" class="form-control" placeholder="Version value. Ex: 0.0.1" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Image 1 name</label>
+    <div class="col-sm-10">
+      <input type="text" name="image1_name" class="form-control" placeholder="Image 1 name" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Image 1 url</label>
+    <div class="col-sm-10">
+      <input type="text" name="image1_url" class="form-control" placeholder="Image 1 url" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Image 2 name</label>
+    <div class="col-sm-10">
+      <input type="text" name="image2_name" class="form-control" placeholder="Image 2 name" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Image 2 url</label>
+    <div class="col-sm-10">
+      <input type="text" name="image2_url" class="form-control" placeholder="Image 2 url" required>
+    </div>
+  </div>
+ 
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+      <button type="submit" class="btn btn-primary">Add version</button>
+    </div>
+  </div>
+</form>

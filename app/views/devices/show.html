@@ -8,6 +8,12 @@
   <div class="row">
     <div class="col-md-8">
       <p>{{ device.body }}</p>
+      <div>
+        <strong>Id:</strong> {{device.id}}
+      </div>
+      <div>
+        <strong>APIKey:</strong> {{device.apiKey}}
+      </div>
       <div class="meta">
         {% if (device.user) %}
           Author: &nbsp;

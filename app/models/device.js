@@ -57,7 +57,7 @@ var DeviceSchema = new Schema({
  */
 
 DeviceSchema.path('name').required(true, 'Device name cannot be blank');
-DeviceSchema.path('body').required(true, 'Device body cannot be blank');
+// DeviceSchema.path('body').required(true, 'Device body cannot be blank');
 
 /**
  * Pre-remove hook
@@ -161,12 +161,6 @@ DeviceSchema.methods = {
     if (~index) this.comments.splice(index, 1);
     else return cb('not found');
     this.save(cb);
-  },
-  /**
-  * Gen a token
-  */
-  genaratorToken:function () {
-    return crypto.randomBytes(64).toString('hex');
   }
 }
 

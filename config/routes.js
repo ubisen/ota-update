@@ -9,6 +9,8 @@
 var users = require('users');
 var devices = require('devices');
 var comments = require('comments');
+var versions = require('versions');
+var applications = require('applications');
 var tags = require('tags');
 var auth = require('./middlewares/authorization');
 
@@ -19,8 +21,8 @@ var auth = require('./middlewares/authorization');
 var deviceAuth = [auth.requiresLogin, auth.device.hasAuthorization];
 var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 var userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
-
-
+var applicationAuth = [auth.requiresLogin, auth.application.hasAuthorization];
+var versionAuth=[auth.requiresLogin, auth.version.hasAuthorization];
 /**
  * Expose routes
  */
@@ -88,25 +90,38 @@ module.exports = function (app, passport) {
 
   app.param('userId', users.load);
   app.get('/users/:userId',userAuth, users.show);
+  // application route
+  app.param('applicationId', applications.load);
+  app.get('/applications', applications.index);
+  app.get('/applications/new', auth.requiresLogin, applications.new);
+  app.post('/applications', auth.requiresLogin, applications.create);
+  app.get('/applications/:applicationId', applications.show);
+  app.get('/applications/:applicationId/edit', applicationAuth, applications.edit);
+  app.put('/applications/:applicationId', applicationAuth, applications.update);
+  app.delete('/applications/:applicationId', applicationAuth, applications.destroy);
   // device routes
-  app.param('id', devices.load);
+  app.param('deviceId', devices.load);
   app.get('/devices', devices.index);
   app.get('/devices/new', auth.requiresLogin, devices.new);
   app.post('/devices', auth.requiresLogin, devices.create);
-  app.get('/devices/:id', devices.show);
-  app.get('/devices/:id/edit', deviceAuth, devices.edit);
-  app.put('/devices/:id', deviceAuth, devices.update);
-  app.delete('/devices/:id', deviceAuth, devices.destroy);
+  app.get('/devices/:deviceId', devices.show);
+  app.get('/devices/:deviceId/edit', deviceAuth, devices.edit);
+  app.put('/devices/:deviceId', deviceAuth, devices.update);
+  app.delete('/devices/:deviceId', deviceAuth, devices.destroy);
 
   // home route
   app.get('/', devices.index);
 
   // comment routes
   app.param('commentId', comments.load);
-  app.post('/devices/:id/comments', auth.requiresLogin, comments.create);
-  app.get('/devices/:id/comments', auth.requiresLogin, comments.create);
-  app.delete('/devices/:id/comments/:commentId', commentAuth, comments.destroy);
-
+  app.post('/devices/:deviceId/comments', auth.requiresLogin, comments.create);
+  app.get('/devices/:deviceId/comments', auth.requiresLogin, comments.create);
+  app.delete('/devices/:deviceId/comments/:commentId', commentAuth, comments.destroy);
+  // comment routes
+  app.param('versionId', versions.load);
+  app.post('/applications/:applicationId/versions', auth.requiresLogin, versions.create);
+  app.get('/applications/:applicationId/versions', auth.requiresLogin, versions.create);
+  app.delete('/applications/:applicationId/versions/:versionId', versionAuth, versions.destroy);
   // tag routes
   app.get('/tags/:tag', tags.index);
 

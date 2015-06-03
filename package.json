@@ -1,6 +1,6 @@
 {
-  "name": "nodejs-express-mongoose-demo",
-  "description": "A demo app illustrating the usage of express, mongoose, passportjs, swig and other modules in nodejs",
+  "name": "ota-update",
+  "description": "OTA Firmware Updating API",
   "keywords": [
     "express",
     "mongoose",

@@ -53,3 +53,31 @@ exports.comment = {
     }
   }
 }
+/**
+ * Version authorization routing middleware
+ */
+
+exports.version = {
+  hasAuthorization: function (req, res, next) {
+    // if the current user is version owner or device owner
+    // give them authority to delete
+    if (req.user.id === req.application.user.id) {
+      next()
+    } else {
+      req.flash('info', 'You are not authorized')
+      res.redirect('/applications/' + req.application.id)
+    }
+  }
+}
+/*
+ *  Application authorization routing middleware
+ */
+exports.application = {
+  hasAuthorization: function (req, res, next) {
+    if (req.application.user.id != req.user.id) {
+      req.flash('info', 'You are not authorized')
+      return res.redirect('/applications/' + req.application.id)
+    }
+    next()
+  }
+}

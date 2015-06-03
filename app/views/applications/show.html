@@ -1,0 +1,49 @@
+{% extends '../layouts/default.html' %}
+
+{% block main %}
+  <h1>{{ application.name }}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      <p>{{ application.description }}</p>
+      <div class="meta">
+        {% if (application.user) %}
+          Author: &nbsp;
+          <a href="{{ '/users/' + application.user._id }}">
+            {{ application.user.name || application.user.username }}
+          </a>
+        {% endif %}
+        {% if (application.tags) %}
+          <p>
+            Tags: &nbsp;
+            {% for tag in application.tags.split(',') %}
+              <i class="muted fa fa-tag"></i>&nbsp;
+              <a href="{{ '/tags/' + tag }}" class="tag">{{ tag }}</a>
+              &nbsp;&nbsp;
+            {% endfor %}
+          </p>
+        {% endif %}
+        <span class="muted">{{ application.createdAt.toISOString()|date('M d, Y  h:m a') }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <form action="{{ '/applications/' + application.id }}" method="post" onsubmit="return confirm('Are you sure?')">
+    <br>
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <a href="{{ '/applications/' + application._id + '/edit' }}" title="edit" class="btn btn-default">
+      Edit
+    </a>
+    &nbsp;
+    <input type="hidden" name="_method" value="DELETE">
+    <button class="btn btn-danger" type="submit">Delete</button>
+  </form>
+  <h3>Versions</h3>
+  {% for version in application.versions|sort({createdAt:true}) %}
+    {% include '../versions/version.html' %}
+  {% endfor %}
+  {% include '../versions/form.html' %}  
+{% endblock %}

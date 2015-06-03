@@ -1,0 +1,20 @@
+<div class="version">
+    <div>
+    	{{version.value}}
+    </div>
+    {%for firmware in version.firmwares%}
+    	<div>
+    		<strong>{{firmware.name}}</strong>
+    		<a href="{{firmware.url}}">{{firmware.url}}</a>	
+    	</div>
+    {%endfor%}
+
+    <!-- <p class="muted"> -->
+      <form role="form" method="post" action="{{ '/applications/' + application._id + '/versions/' + version._id }}" onsubmit="return confirm('Are you sure?')" class="form-inline">
+        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+        <span class="muted">{{ version.createdAt.toISOString()|date('M d, Y  h:m a') }}</span>
+        <input type="hidden" name="_method" value="DELETE">
+        <button class="btn btn-danger btn-link error" type="submit">delete</button>
+      </form>
+    <!-- </p> -->
+  </div>

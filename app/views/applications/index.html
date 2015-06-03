@@ -2,13 +2,13 @@
 
 {% block main %}
   <h1>{{ title }}</h1>
-  <a href="/devices/new">Create one</a>
+  <a href="/applications/new">Create one</a>
 {% endblock %}
 
 {% block content %}
-  {% if (devices.length) %}
-    {% for device in devices %}
-      {% include 'device.html' %}
+  {% if (applications.length) %}
+    {% for application in applications %}
+      {% include 'application.html' %}
     {% endfor %}
 
     {% if (pages > 1) %}
@@ -20,8 +20,7 @@
     {% endif %}
   {% else %}
     <h4 class="muted">
-      No devices.&nbsp;
-     
+      No applications.&nbsp;
     </h4>
   {% endif %}
 {% endblock %}
