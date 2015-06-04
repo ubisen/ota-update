@@ -9,16 +9,16 @@ var mongoose = require('mongoose')
   , app = require('../server')
   , context = describe
   , User = mongoose.model('User')
-  , Device = mongoose.model('Device')
+  , Application = mongoose.model('Application')
   , agent = request.agent(app)
 
 var count
 
 /**
- * Devices tests
+ * Applications tests
  */
 
-describe('Devices', function () {
+describe('Applications', function () {
   before(function (done) {
     // create a user
     var user = new User({
@@ -33,22 +33,22 @@ describe('Devices', function () {
     })
   })
 
-  describe('GET /devices', function () {
+  describe('GET /applications', function () {
     it('should respond with Content-Type text/html', function (done) {
       agent
-      .get('/devices')
+      .get('/applications')
       .expect('Content-Type', /html/)
       .expect(200)
-      .expect(/Devices/)
+      .expect(/Applications/)
       .end(done)
     })
   })
 
-  describe('GET /devices/new', function () {
+  describe('GET /applications/new', function () {
     context('When not logged in', function () {
       it('should redirect to /login', function (done) {
         agent
-        .get('/devices/new')
+        .get('/applications/new')
         .expect('Content-Type', /plain/)
         .expect(302)
         .expect('Location', '/login')
@@ -69,20 +69,20 @@ describe('Devices', function () {
 
       it('should respond with Content-Type text/html', function (done) {
         agent
-        .get('/devices/new')
+        .get('/applications/new')
         .expect('Content-Type', /html/)
         .expect(200)
-        .expect(/New Device/)
+        .expect(/New Application/)
         .end(done)
       })
     })
   })
 
-  describe('POST /devices', function () {
+  describe('POST /applications', function () {
     context('When not logged in', function () {
       it('should redirect to /login', function (done) {
         request(app)
-        .get('/devices/new')
+        .get('/applications/new')
         .expect('Content-Type', /plain/)
         .expect(302)
         .expect('Location', '/login')
@@ -103,7 +103,7 @@ describe('Devices', function () {
 
       describe('Invalid parameters', function () {
         before(function (done) {
-          Device.count(function (err, cnt) {
+          Application.count(function (err, cnt) {
             count = cnt
             done()
           })
@@ -111,17 +111,17 @@ describe('Devices', function () {
 
         it('should respond with error', function (done) {
           agent
-          .post('/devices')
+          .post('/applications')
           .field('name', '')
           .field('description', 'foo')
           .expect('Content-Type', /html/)
           .expect(200)
-          .expect(/Device name cannot be blank/)
+          .expect(/Application name cannot be blank/)
           .end(done)
         })
 
         it('should not save to the database', function (done) {
-          Device.count(function (err, cnt) {
+          Application.count(function (err, cnt) {
             count.should.equal(cnt)
             done()
           })
@@ -130,42 +130,42 @@ describe('Devices', function () {
 
       describe('Valid parameters', function () {
         before(function (done) {
-          Device.count(function (err, cnt) {
+          Application.count(function (err, cnt) {
             count = cnt
             done()
           })
         })
 
-        it('should redirect to the new device page', function (done) {
+        it('should redirect to the new application page', function (done) {
           agent
-          .post('/devices')
+          .post('/applications')
           .field('name', 'foo')
           .field('description', 'bar')
           .expect('Content-Type', /plain/)
-          .expect('Location', /\/devices\//)
+          .expect('Location', /\/applications\//)
           .expect(302)
           .expect(/Moved Temporarily/)
           .end(done)
         })
 
         it('should insert a record to the database', function (done) {
-          Device.count(function (err, cnt) {
+          Application.count(function (err, cnt) {
             cnt.should.equal(count + 1)
             done()
           })
         })
 
-        it('should save the device to the database', function (done) {
-          Device
+        it('should save the application to the database', function (done) {
+          Application
           .findOne({ name: 'foo'})
           .populate('user')
-          .exec(function (err, device) {
+          .exec(function (err, application) {
             should.not.exist(err)
-            device.should.be.an.instanceOf(Device)
-            device.name.should.equal('foo')
-            device.description.should.equal('bar')
-            device.user.email.should.equal('foobar@example.com')
-            device.user.name.should.equal('Foo bar')
+            application.should.be.an.instanceOf(Application)
+            application.name.should.equal('foo')
+            application.description.should.equal('bar')
+            application.user.email.should.equal('foobar@example.com')
+            application.user.name.should.equal('Foo bar')
             done()
           })
         })
