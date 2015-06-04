@@ -36,7 +36,7 @@ var setTags = function (tags) {
 
 var DeviceSchema = new Schema({
   name: {type : String, default : '', trim : true},
-  body: {type : String, default : '', trim : true},
+  description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
   apiKey: { type: String, default: '' },
   comments: [{
@@ -57,7 +57,7 @@ var DeviceSchema = new Schema({
  */
 
 DeviceSchema.path('name').required(true, 'Device name cannot be blank');
-// DeviceSchema.path('body').required(true, 'Device body cannot be blank');
+// DeviceSchema.path('description').required(true, 'Device description cannot be blank');
 
 /**
  * Pre-remove hook
@@ -184,7 +184,19 @@ DeviceSchema.statics = {
       .populate('comments.user')
       .exec(cb);
   },
-
+  /**
+   * Find Device by name
+   *
+   * @param {String} name
+   * @param {Function} cb
+   * @api private
+   */
+  loadByApiKey:function (apiKey,cb) {
+    this.findOne({ apiKey : apiKey })
+      .populate('user', 'name email username')
+      .populate('comments.user')
+      .exec(cb);
+  },
   /**
    * List Devices
    *

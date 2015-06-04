@@ -18,15 +18,14 @@ When bootup, OTA client polls for latest informations of firmware of an applicat
 OTA server should return information of last version, which contain metadata of the latest, including URL to get user1/user2.bin.
 
     {
-        application: application,
-        last:
-            {
-                version: 0.1.100,
-                created: timestamp,
-                protocol: http/https,
-                host: cdn-host,
-                url: /firmware/:application/versions/0.1.100
-            }
+    "application": "application",
+    "last": {
+            "version": "0.0.1",
+            "created": "2015-06-04T10:15:33.917Z",
+            "protocol": "https:",
+            "host": "domchristie.github.io",
+            "path": "/to-markdown/"
+        }
     }
 
 Note: ESP host will refuse the response if it doesnot contain tuble {version, protocol, host, url}.

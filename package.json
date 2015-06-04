@@ -37,6 +37,7 @@
     "imager": "0.2.7",
     "method-override": "2.2.0",
     "mongoose": "3.8.16",
+    "mongoose-unique-validator": "^0.4.1",
     "morgan": "1.3.1",
     "multer": "0.1.4",
     "notifier": "0.1.5",

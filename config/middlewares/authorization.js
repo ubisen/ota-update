@@ -1,3 +1,6 @@
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
+var Device = mongoose.model('Device');
 
 /*
  *  Generic require login routing middleware
@@ -20,6 +23,22 @@ exports.user = {
       return res.redirect('/users/' + req.profile.id)
     }
     next()
+  },
+  hasAuthorizationByApiKey : function (req,res,next) {
+    if(!req.headers["api-key"])
+      return res.status(401).send({
+        errors:["Authenticate fail! User Api-key required"]
+      });
+    var options = {
+      criteria: { apiKey : req.headers["api-key"] }
+    };
+    User.load(options, function (err, user) {
+      if (err) 
+        return res.status(500).send({errors:["Server errors"]});
+      if (!user) return res.status(403).send({errors:["Access deny!"]});
+      req.user = user;
+      next();
+    });
   }
 }
 
@@ -34,6 +53,19 @@ exports.device = {
       return res.redirect('/devices/' + req.device.id)
     }
     next()
+  },
+  hasAuthorizationByApiKey : function (req,res,next) {
+    if(!req.headers["api-key"])
+      return res.status(401).send({
+        errors:["Authenticate fail! Device Api-key required"]
+      });
+    Device.loadByApiKey(req.headers["api-key"], function (err, device) {
+      if (err) 
+        return res.status(500).send({errors:["Server errors"]});
+      if (!device) return res.status(403).send({errors:["Access deny!"]});
+      req.device = device;
+      next();
+    });
   }
 }
 
@@ -79,5 +111,10 @@ exports.application = {
       return res.redirect('/applications/' + req.application.id)
     }
     next()
+  },
+  hasAuthorizationByApiKey : function (req,res,next) {
+    if(req.user.id === req.application.user.id)
+      return next();
+    res.status(403).send({errors:["Access deny!"]});
   }
 }

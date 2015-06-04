@@ -5,13 +5,14 @@
 
 // Note: We can require users, devices and other cotrollers because we have
 // set the NODE_PATH to be ./app/controllers (package.json # scripts # start)
-
+var apis = require('apis');
 var users = require('users');
 var devices = require('devices');
 var comments = require('comments');
 var versions = require('versions');
 var applications = require('applications');
 var tags = require('tags');
+var homes = require('homes');
 var auth = require('./middlewares/authorization');
 
 /**
@@ -23,6 +24,8 @@ var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 var userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
 var applicationAuth = [auth.requiresLogin, auth.application.hasAuthorization];
 var versionAuth=[auth.requiresLogin, auth.version.hasAuthorization];
+var applicationApiAuth = [auth.user.hasAuthorizationByApiKey,auth.application.hasAuthorizationByApiKey];
+
 /**
  * Expose routes
  */
@@ -110,7 +113,7 @@ module.exports = function (app, passport) {
   app.delete('/devices/:deviceId', deviceAuth, devices.destroy);
 
   // home route
-  app.get('/', devices.index);
+  app.get('/', homes.index);
 
   // comment routes
   app.param('commentId', comments.load);
@@ -125,6 +128,9 @@ module.exports = function (app, passport) {
   // tag routes
   app.get('/tags/:tag', tags.index);
 
+  // apis routes
+  app.param('applicationName',applications.loadByNameForApi);
+  app.get('/api/:applicationName/versions/:image',auth.device.hasAuthorizationByApiKey,apis.images)
 
   /**
    * Error handling

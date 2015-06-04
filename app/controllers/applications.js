@@ -22,7 +22,18 @@ exports.load = function (req, res, next, id){
     next();
   });
 };
+/**
+ * Load by Name for API
+ */
 
+exports.loadByNameForApi = function (req, res, next, name){
+  Application.loadByName(name, function (err, application) {
+    if (err) return res.status(500).send({errors:["Server errors"]});
+    if (!application) return res.status(404).send({errors:["Application not found"]});
+    req.application = application;
+    next();
+  });
+};
 /**
  * List
  */
@@ -104,6 +115,7 @@ exports.update = function (req, res){
   
   // make sure no one changes the user
   delete req.body.user;
+  if(!req.body.tags) req.body.tags='';
   application = extend(application, req.body);
 
   application.save(function (err) {

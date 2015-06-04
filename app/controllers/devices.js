@@ -13,8 +13,6 @@ var extend = require('util')._extend
  */
 
 exports.load = function (req, res, next, id){
-  var User = mongoose.model('User');
-
   Device.load(id, function (err, device) {
     if (err) return next(err);
     if (!device) return next(new Error('not found'));
@@ -108,6 +106,7 @@ exports.update = function (req, res){
 
   // make sure no one changes the user
   delete req.body.user;
+  if(!req.body.tags) req.body.tags='';
   device = extend(device, req.body);
 
   device.uploadAndSave(images, function (err) {

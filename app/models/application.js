@@ -5,6 +5,7 @@
 
 var mongoose = require('mongoose');
 var utils = require('../../lib/utils');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
 
@@ -30,7 +31,7 @@ var setTags = function (tags) {
  */
 
 var ApplicationSchema = new Schema({
-  name: {type : String, default : '', trim : true},
+  name: {type : String, default : '', trim : true,unique:true},
   description: {type : String, default : '', trim : true,maxlength:[200,"Application desctiption max length {VALUE}"]},
   user: {type : Schema.ObjectId, ref : 'User'},
   createdAt  : {type : Date, default : Date.now},
@@ -47,10 +48,13 @@ var ApplicationSchema = new Schema({
   tags: {type: [], get: getTags, set: setTags}
 });
 
+/*
+* Plugin
+*/
+ApplicationSchema.plugin(uniqueValidator, { message: 'Application "{VALUE}" exist.' });
 /**
  * Validations
  */
-
 ApplicationSchema.path('name').required(true, 'Application name cannot be blank');
 ApplicationSchema.path('name').match(/^[a-z0-9_+-]+$/i, 'Application name only +, -, _, letters and numbers allowed');
 
@@ -126,6 +130,18 @@ ApplicationSchema.statics = {
 
   load: function (id, cb) {
     this.findOne({ _id : id })
+      .populate('user', 'name email username')
+      .exec(cb);
+  },
+  /**
+   * Find Application by name
+   *
+   * @param {String} name
+   * @param {Function} cb
+   * @api private
+   */
+  loadByName:function (name,cb) {
+    this.findOne({ name : name })
       .populate('user', 'name email username')
       .exec(cb);
   },

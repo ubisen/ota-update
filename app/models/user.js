@@ -178,7 +178,7 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name username token';
+    options.select = options.select || 'name username apiKey';
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
