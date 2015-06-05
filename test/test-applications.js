@@ -37,16 +37,7 @@ describe('Applications', function () {
       done(err);
     });
   });
-  describe('GET /applications', function () {
-    it('should respond with Content-Type text/html', function (done) {
-      agent
-      .get('/applications')
-      .expect('Content-Type', /html/)
-      .expect(200)
-      .expect(/Applications/)
-      .end(done)
-    })
-  })
+  
 
   describe('GET /applications/new', function () {
     context('When not logged in', function () {
@@ -70,7 +61,16 @@ describe('Applications', function () {
         .field('password', 'foobar')
         .end(done)
       })
-
+      describe('GET /applications', function () {
+        it('should respond with Content-Type text/html', function (done) {
+          agent
+          .get('/applications')
+          .expect('Content-Type', /html/)
+          .expect(200)
+          .expect(/Applications/)
+          .end(done)
+        })
+      })
       it('should respond with Content-Type text/html', function (done) {
         agent
         .get('/applications/new')

@@ -33,17 +33,6 @@ describe('Devices', function () {
     })
   })
 
-  describe('GET /devices', function () {
-    it('should respond with Content-Type text/html', function (done) {
-      agent
-      .get('/devices')
-      .expect('Content-Type', /html/)
-      .expect(200)
-      .expect(/Devices/)
-      .end(done)
-    })
-  })
-
   describe('GET /devices/new', function () {
     context('When not logged in', function () {
       it('should redirect to /login', function (done) {
@@ -66,7 +55,16 @@ describe('Devices', function () {
         .field('password', 'foobar')
         .end(done)
       })
-
+      describe('GET /devices', function () {
+        it('should respond with Content-Type text/html', function (done) {
+          agent
+          .get('/devices')
+          .expect('Content-Type', /html/)
+          .expect(200)
+          .expect(/Devices/)
+          .end(done)
+        })
+      })
       it('should respond with Content-Type text/html', function (done) {
         agent
         .get('/devices/new')
