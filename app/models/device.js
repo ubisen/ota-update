@@ -178,7 +178,7 @@ DeviceSchema.statics = {
    * @api private
    */
 
-  load: function (id, cb) {
+  loadById: function (id, cb) {
     this.findOne({ _id : id })
       .populate('user', 'name email username')
       .populate('comments.user')

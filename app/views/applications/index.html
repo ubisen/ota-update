@@ -7,6 +7,9 @@
 
 {% block content %}
   {% if (applications.length) %}
+    <h4 class="muted">
+      {{applications.length}} applications.&nbsp;
+    </h4>
     {% for application in applications %}
       {% include 'application.html' %}
     {% endfor %}

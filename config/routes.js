@@ -24,7 +24,6 @@ var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 var userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
 var applicationAuth = [auth.requiresLogin, auth.application.hasAuthorization];
 var versionAuth=[auth.requiresLogin, auth.version.hasAuthorization];
-var applicationApiAuth = [auth.user.hasAuthorizationByApiKey,auth.application.hasAuthorizationByApiKey];
 
 /**
  * Expose routes
@@ -95,19 +94,19 @@ module.exports = function (app, passport) {
   app.get('/users/:userId',userAuth, users.show);
   // application route
   app.param('applicationId', applications.load);
-  app.get('/applications', applications.index);
+  app.get('/applications',auth.requiresLogin, applications.index);
   app.get('/applications/new', auth.requiresLogin, applications.new);
   app.post('/applications', auth.requiresLogin, applications.create);
-  app.get('/applications/:applicationId', applications.show);
+  app.get('/applications/:applicationId',auth.requiresLogin, applications.show);
   app.get('/applications/:applicationId/edit', applicationAuth, applications.edit);
   app.put('/applications/:applicationId', applicationAuth, applications.update);
   app.delete('/applications/:applicationId', applicationAuth, applications.destroy);
   // device routes
-  app.param('deviceId', devices.load);
-  app.get('/devices', devices.index);
+  app.param('deviceId',auth.requiresLogin, devices.load);
+  app.get('/devices',auth.requiresLogin, devices.index);
   app.get('/devices/new', auth.requiresLogin, devices.new);
   app.post('/devices', auth.requiresLogin, devices.create);
-  app.get('/devices/:deviceId', devices.show);
+  app.get('/devices/:deviceId',auth.requiresLogin, devices.show);
   app.get('/devices/:deviceId/edit', deviceAuth, devices.edit);
   app.put('/devices/:deviceId', deviceAuth, devices.update);
   app.delete('/devices/:deviceId', deviceAuth, devices.destroy);
@@ -129,9 +128,9 @@ module.exports = function (app, passport) {
   app.get('/tags/:tag', tags.index);
 
   // apis routes
-  app.param('applicationName',applications.loadByNameForApi);
-  app.get('/api/:applicationName/versions/:image',auth.device.hasAuthorizationByApiKey,apis.images)
-  app.post('/api/:applicationName/versions',versions.createApi)
+  app.param('applicationName',auth.loadApplicationByApiKeyByName);
+  app.get('/api/:applicationName/versions/:image',apis.images)
+  app.post('/api/:applicationName/versions',auth.application.hasAuthorizationByApiKey,versions.createApi)
 
   /**
    * Error handling

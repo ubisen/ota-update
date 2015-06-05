@@ -15,25 +15,14 @@ var extend = require('util')._extend
 exports.load = function (req, res, next, id){
   // var User = mongoose.model('User');
 
-  Application.load(id, function (err, application) {
+  Application.loadById(id, function (err, application) {
     if (err) return next(err);
     if (!application) return next(new Error('not found'));
     req.application = application;
     next();
   });
 };
-/**
- * Load by Name for API
- */
 
-exports.loadByNameForApi = function (req, res, next, name){
-  Application.loadByName(name, function (err, application) {
-    if (err) return res.status(500).send({errors:["Server errors"]});
-    if (!application) return res.status(404).send({errors:["Application not found"]});
-    req.application = application;
-    next();
-  });
-};
 /**
  * List
  */
@@ -42,6 +31,7 @@ exports.index = function (req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1;
   var perPage = 30;
   var options = {
+    criteria:{user:req.user.id},
     perPage: perPage,
     page: page
   };

@@ -7,6 +7,9 @@
 
 {% block content %}
   {% if (devices.length) %}
+    <h4 class="muted">
+      {{devices.length}} devices.&nbsp;
+    </h4>
     {% for device in devices %}
       {% include 'device.html' %}
     {% endfor %}
@@ -21,7 +24,6 @@
   {% else %}
     <h4 class="muted">
       No devices.&nbsp;
-     
     </h4>
   {% endif %}
 {% endblock %}

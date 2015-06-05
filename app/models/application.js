@@ -5,7 +5,7 @@
 
 var mongoose = require('mongoose');
 var utils = require('../../lib/utils');
-var uniqueValidator = require('mongoose-unique-validator');
+// var uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
 
@@ -31,7 +31,7 @@ var setTags = function (tags) {
  */
 
 var ApplicationSchema = new Schema({
-  name: {type : String, default : '', trim : true,unique:true},
+  name: {type : String, default : '', trim : true},
   description: {type : String, default : '', trim : true,maxlength:[200,"Application desctiption max length {VALUE}"]},
   user: {type : Schema.ObjectId, ref : 'User'},
   createdAt  : {type : Date, default : Date.now},
@@ -51,7 +51,7 @@ var ApplicationSchema = new Schema({
 /*
 * Plugin
 */
-ApplicationSchema.plugin(uniqueValidator, { message: 'Application "{VALUE}" exist.' });
+// ApplicationSchema.plugin(uniqueValidator, { message: 'Application "{VALUE}" exist.' });
 /**
  * Validations
  */
@@ -69,8 +69,17 @@ ApplicationSchema.pre('remove', function (next) {
 * Pre-save hook
 */
 ApplicationSchema.pre('save',function (next) {
-  if (!this.isNew) return next();
-  return next();
+  var Application = mongoose.model('Application');
+  var self=this;
+  Application.findOne({ name : self.name,user:self.user },function (err,application) {
+    if(err)
+      return next(err);
+    if(application){     
+      if(self.isNew || (!self.isNew && application.name == self.name && self.id!=application.id))
+        return next(new Error('Application exist!'));
+    }
+    return next();
+  });
 });
 
 
@@ -119,7 +128,19 @@ ApplicationSchema.methods = {
  */
 
 ApplicationSchema.statics = {
-
+  /**
+   * Load
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+  load: function (options, cb) {
+    options.select = options.select || 'name description';
+    this.findOne(options.criteria)
+      .select(options.select)
+      .exec(cb);
+  },
   /**
    * Find Application by id
    *
@@ -128,24 +149,11 @@ ApplicationSchema.statics = {
    * @api private
    */
 
-  load: function (id, cb) {
+  loadById: function (id, cb) {
     this.findOne({ _id : id })
       .populate('user', 'name email username')
       .exec(cb);
   },
-  /**
-   * Find Application by name
-   *
-   * @param {String} name
-   * @param {Function} cb
-   * @api private
-   */
-  loadByName:function (name,cb) {
-    this.findOne({ name : name })
-      .populate('user', 'name email username')
-      .exec(cb);
-  },
-
   /**
    * List Applications
    *

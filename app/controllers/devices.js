@@ -13,7 +13,7 @@ var extend = require('util')._extend
  */
 
 exports.load = function (req, res, next, id){
-  Device.load(id, function (err, device) {
+  Device.loadById(id, function (err, device) {
     if (err) return next(err);
     if (!device) return next(new Error('not found'));
     req.device = device;
@@ -29,6 +29,7 @@ exports.index = function (req, res){
   var page = (req.param('page') > 0 ? req.param('page') : 1) - 1;
   var perPage = 10;
   var options = {
+    criteria:{user:req.user.id},
     perPage: perPage,
     page: page
   };

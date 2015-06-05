@@ -14,8 +14,9 @@ exports.applicationByName = function (req,res,next, applicationName) {
 
 exports.images = function (req,res,next) {
 	var image;
-	if(req.application.versions.length>0){
-		var version = req.application.versions[req.application.versions.length-1];
+	var versions = versions=req.application.versions;
+	if(versions.length>0){
+		var version = versions[versions.length-1];
 		for(var i=0;i<version.firmwares.length;i++){
 			if(version.firmwares[i].name==req.params.image){
 				image = {};
