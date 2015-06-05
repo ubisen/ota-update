@@ -9,11 +9,9 @@ The server has two function:
 ### ESP host
 When bootup, OTA client polls for latest informations of firmware of an application via REST calling:
 
-    GET /firmware/:application/versions/:image?current_version=version
+    GET /api/:application/versions/:image?current_version=version
     HEADERS:
-        uuid: uuid
         token: token (device)
-        agent: esp8266
 
 OTA server should return information of last version, which contain metadata of the latest, including URL to get user1/user2.bin.
 
@@ -44,9 +42,7 @@ One when create new version of an application, need to register to fota server. 
 
     BODY
     {
-        application: application,
         version: new version,
-        agent: esp8266
         firmwares: [{
             name: image1,
             url: "https://dl.dropboxusercontent.com/s/jwnjhet4tngh3nh/user1.bin?dl=0"

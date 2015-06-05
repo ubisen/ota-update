@@ -21,7 +21,7 @@ exports.images = function (req,res,next) {
 				image = {};
 				image.application = req.application.name;
 				image.last = {
-					version:version.value,
+					version:version.version,
 					created:version.createdAt,
 					protocol:url.parse(version.firmwares[i].url).protocol,
 					host:url.parse(version.firmwares[i].url).host,

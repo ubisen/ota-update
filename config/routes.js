@@ -131,6 +131,7 @@ module.exports = function (app, passport) {
   // apis routes
   app.param('applicationName',applications.loadByNameForApi);
   app.get('/api/:applicationName/versions/:image',auth.device.hasAuthorizationByApiKey,apis.images)
+  app.post('/api/:applicationName/versions',versions.createApi)
 
   /**
    * Error handling

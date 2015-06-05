@@ -77,10 +77,6 @@ exports.new = function (req, res){
 
 exports.create = function (req, res) {
   var application = new Application(req.body);
-  var images = req.files.image
-    ? [req.files.image]
-    : undefined;
-
   application.user = req.user;
   application.save(function (err) {
     if (!err) {

@@ -74,7 +74,6 @@ exports.create = function (req, res) {
       req.flash('success', 'Successfully created device!');
       return res.redirect('/devices/'+device._id);
     }
-    console.log(err);
     res.render('devices/new', {
       title: 'New Device',
       device: device,

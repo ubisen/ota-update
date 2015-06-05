@@ -20,19 +20,23 @@ var count
 
 describe('Applications', function () {
   before(function (done) {
-    // create a user
-    var user = new User({
-      email: 'foobar@example.com',
-      name: 'Foo bar',
-      username: 'foobar',
-      password: 'foobar'
-    })
-    user.save(function (err,user) {
-      console.log(err);
-      done();
-    })
+    User.remove({},function (err) {
+      var user = new User({
+        email: 'foobar@example.com',
+        name: 'Foo bar',
+        username: 'foobar',
+        password: 'foobar'
+      })
+      user.save(function (err,user) {
+        done();
+      })
+    });   
   })
-
+  before(function (done) {
+    Application.remove({},function (err) {
+      done(err);
+    });
+  });
   describe('GET /applications', function () {
     it('should respond with Content-Type text/html', function (done) {
       agent

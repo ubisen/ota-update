@@ -36,7 +36,7 @@ var ApplicationSchema = new Schema({
   user: {type : Schema.ObjectId, ref : 'User'},
   createdAt  : {type : Date, default : Date.now},
   versions: [{
-    value: { type : String, default : '', trim : true, required: [true,'Version value cannot be blank']},
+    version: { type : String, default : '', trim : true, required: [true,'Version value cannot be blank']},
     firmwares: [
       {
         name:{type : String, default : '', trim : true, required: [true,'Firmware name cannot be blank']},
@@ -91,7 +91,7 @@ ApplicationSchema.methods = {
 
   addVersion: function (version, cb) {
     
-    console.log(version);
+    // console.log(version);
     this.versions.push(version);
     this.save(cb);
   },
@@ -104,7 +104,7 @@ ApplicationSchema.methods = {
    * @api private
    */
 
-  removeComment: function (versionId, cb) {
+  removeVersion: function (versionId, cb) {
     var index = utils.indexof(this.versions, { id: versionId });
     if (~index) this.versions.splice(index, 1);
     else return cb('not found');

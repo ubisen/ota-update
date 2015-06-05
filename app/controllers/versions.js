@@ -26,20 +26,19 @@ exports.load = function (req, res, next, id) {
 exports.create = function (req, res) {
   var application = req.application;
   
-  if (!req.body.value||!req.body.image1_name||!req.body.image1_url||!req.body.image2_name||!req.body.image2_url) 
+  if (!req.body.version||!req.body.image1_url||!req.body.image2_url) 
   	return res.redirect('/applications/'+ application.id);
   var version ={
-  	value:req.body.value,
+  	version:req.body.version,
   	firmwares:[{
-  			name:req.body.image1_name,
+  			name:"image1",
   			url:req.body.image1_url
   		},{
-  			name:req.body.image2_name,
+  			name:"image2",
   			url:req.body.image2_url
   		}
   	]
   }
-
   application.addVersion(version, function (err) {
     if (err) return res.render('500');
     res.redirect('/applications/'+ application.id);
@@ -47,12 +46,27 @@ exports.create = function (req, res) {
 }
 
 /**
+ * Create version
+ */
+
+exports.createApi = function (req, res) {
+  var application = req.application;
+  application.addVersion(req.body, function (err) {
+    if (err){
+      // console.log(err);
+      errors = utils.errors(err.errors || err);
+      return res.status(400).send({errors:errors});
+    }
+    res.status(201).send(req.body);
+  });
+}
+/**
  * Delete version
  */
 
 exports.destroy = function (req, res) {
   var application = req.application;
-  application.removeComment(req.param('versionId'), function (err) {
+  application.removeVersion(req.param('versionId'), function (err) {
     if (err) {
       req.flash('error', 'Oops! The version was not found');
     } else {
