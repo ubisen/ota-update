@@ -35,7 +35,7 @@ var setTags = function (tags) {
  */
 
 var DeviceSchema = new Schema({
-  name: {type : String, default : '', trim : true},
+  name: {type : String, default : '', trim : true,maxlength:[200,"Device name max length {VALUE}"]},
   description: {type : String, default : '', trim : true},
   user: {type : Schema.ObjectId, ref : 'User'},
   apiKey: { type: String, default: '' },

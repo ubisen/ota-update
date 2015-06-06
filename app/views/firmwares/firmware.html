@@ -1,0 +1,27 @@
+<div class="firmware">
+  <h3>
+    <a href="{{ '/firmwares/' + firmware._id }}" title="{{ firmware.name }}">
+      {{ firmware.name }}
+    </a>
+  </h3>
+  <p>{{ firmware.description }}</p>
+
+  <span class="muted">{{ firmware.createdAt.toISOString()|date('M d, Y  h:m a') }}</span>
+
+  {% if (firmware.user) %}
+    &nbsp; - &nbsp;
+    <span>Author: </span>
+    <a href="{{ '/users/' + firmware.user._id }}">
+      {{ firmware.user.name || firmware.user.username }}
+    </a>
+  {% endif %}
+  {% if (firmware.tags) %}
+    &nbsp; - &nbsp;
+    <span>Tags: </span>
+    {% for tag in firmware.tags.split(',') %}
+      <i class="muted fa fa-tag"></i>&nbsp;
+      <a href="{{ '/tags/' + tag }}" class="tag">{{ tag }}</a>
+      &nbsp;&nbsp;
+    {% endfor %}
+  {% endif %}
+</div>

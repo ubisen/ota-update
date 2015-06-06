@@ -26,7 +26,6 @@ exports.load = function (req, res, next, id) {
 exports.create = function (req, res) {
   var device = req.device;
   var user = req.user;
-  console.log(req.body);
   if (!req.body.body) return res.redirect('/devices/'+ device.id);
 
   device.addComment(user, req.body, function (err) {

@@ -14,8 +14,10 @@ var extend = require('util')._extend
 
 exports.load = function (req, res, next, id){
   Device.loadById(id, function (err, device) {
+    // console.log("device");
     if (err) return next(err);
     if (!device) return next(new Error('not found'));
+
     req.device = device;
     next();
   });

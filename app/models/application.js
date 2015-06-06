@@ -5,7 +5,6 @@
 
 var mongoose = require('mongoose');
 var utils = require('../../lib/utils');
-// var uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
 
@@ -31,7 +30,7 @@ var setTags = function (tags) {
  */
 
 var ApplicationSchema = new Schema({
-  name: {type : String, default : '', trim : true},
+  name: {type : String, default : '', trim : true,maxlength:[200,"Application name max length {VALUE}"]},
   description: {type : String, default : '', trim : true,maxlength:[200,"Application desctiption max length {VALUE}"]},
   user: {type : Schema.ObjectId, ref : 'User'},
   createdAt  : {type : Date, default : Date.now},
@@ -48,10 +47,6 @@ var ApplicationSchema = new Schema({
   tags: {type: [], get: getTags, set: setTags}
 });
 
-/*
-* Plugin
-*/
-// ApplicationSchema.plugin(uniqueValidator, { message: 'Application "{VALUE}" exist.' });
 /**
  * Validations
  */

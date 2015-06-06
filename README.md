@@ -11,9 +11,13 @@ When bootup, OTA client polls for latest informations of firmware of an applicat
 
     GET /api/:application/versions/:image?current_version=version
     HEADERS:
-        token: token (device)
+        api-key: "Api-key of your device or your user Api-key"
 
-OTA server should return information of last version, which contain metadata of the latest, including URL to get user1/user2.bin.
+####By default: 
+    `image` Parameter instead of `image1` or `image2`.
+    `application` Parameter is application name
+
+OTA server should return information of last version, which contain metadata of the latest, including parsed URL to get user1/user2.bin.
 
     {
     "application": "application",
@@ -21,8 +25,8 @@ OTA server should return information of last version, which contain metadata of 
             "version": "0.0.1",
             "created": "2015-06-04T10:15:33.917Z",
             "protocol": "https:",
-            "host": "domchristie.github.io",
-            "path": "/to-markdown/"
+            "host": "ubisen.com",
+            "path": "/files/user1.bin"
         }
     }
 
@@ -38,11 +42,11 @@ One when create new version of an application, need to register to fota server. 
 
     POST /firmware/:application
     HEADERS:
-        token: token (user)
+        api-key: "Api-key of user"
 
     BODY
     {
-        version: new version,
+        version:"0.0.1",
         firmwares: [{
             name: image1,
             url: "https://dl.dropboxusercontent.com/s/jwnjhet4tngh3nh/user1.bin?dl=0"
@@ -61,21 +65,31 @@ cache-control: max-age=0
 Content-Length: 387808
 ```
 
-## Upload firmware
+## Upload firmware    
 The firmware could be upload to third party storage service, or use this own server.
 
-    POST /upload/:application/firmware?image=image1/image2&version=version
+    POST /api/firmware
     HEADERS:
-        token: token (user)
-    BODY: binary file
+        api-key: "Api-key of user"
+    BODY: 
+        data: binary file
+        description:"Your file description" // optional
+        tags:"tag1,tag2" // optional
 
+Example:
+    
+    curl -i -H "api-key:0f551a846d865ef167a496f8584ac75ce284d3de4562b81cfce4ccccfb3b5e66" -F name=data -F data=@swap1.bin http://ota.ubisen.com/api/firmware
+    
 return
 
-    BODY
-    {
-        application: application
-        image: image1/image2
-        url: url
+    {  
+        "url":"http://ota.ubisen.com/firmwares/5572b380130d0c000040bfee/download",
+        "parseUrl":{  
+            "protocol":"http:",
+            "host":"localhost:3000",
+            "path":"/firmwares/5572b380130d0c000040bfee/download"
+        },
+        "created":"2015-06-06T08:46:56.755Z"
     }
 
 Then the returned ```url``` use to register new version.

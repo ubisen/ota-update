@@ -13,8 +13,6 @@ var extend = require('util')._extend
  */
 
 exports.load = function (req, res, next, id){
-  // var User = mongoose.model('User');
-
   Application.loadById(id, function (err, application) {
     if (err) return next(err);
     if (!application) return next(new Error('not found'));

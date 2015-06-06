@@ -11,6 +11,7 @@ var devices = require('devices');
 var comments = require('comments');
 var versions = require('versions');
 var applications = require('applications');
+var firmwares = require('firmwares');
 var tags = require('tags');
 var homes = require('homes');
 var auth = require('./middlewares/authorization');
@@ -102,7 +103,7 @@ module.exports = function (app, passport) {
   app.put('/applications/:applicationId', applicationAuth, applications.update);
   app.delete('/applications/:applicationId', applicationAuth, applications.destroy);
   // device routes
-  app.param('deviceId',auth.requiresLogin, devices.load);
+  app.param('deviceId', devices.load);
   app.get('/devices',auth.requiresLogin, devices.index);
   app.get('/devices/new', auth.requiresLogin, devices.new);
   app.post('/devices', auth.requiresLogin, devices.create);
@@ -110,6 +111,16 @@ module.exports = function (app, passport) {
   app.get('/devices/:deviceId/edit', deviceAuth, devices.edit);
   app.put('/devices/:deviceId', deviceAuth, devices.update);
   app.delete('/devices/:deviceId', deviceAuth, devices.destroy);
+  // firmware routes
+  app.param('firmwareId', firmwares.load);
+  app.get('/firmwares', firmwares.index);
+  app.get('/firmwares/new', firmwares.new);
+  app.post('/firmwares',  firmwares.create);
+  app.get('/firmwares/:firmwareId/download', firmwares.download);
+  app.get('/firmwares/:firmwareId', firmwares.show);
+  app.get('/firmwares/:firmwareId/edit', firmwares.edit);
+  app.put('/firmwares/:firmwareId', firmwares.update);
+  app.delete('/firmwares/:firmwareId', firmwares.destroy);
 
   // home route
   app.get('/', homes.index);
@@ -131,7 +142,7 @@ module.exports = function (app, passport) {
   app.param('applicationName',auth.loadApplicationByApiKeyByName);
   app.get('/api/:applicationName/versions/:image',apis.images)
   app.post('/api/:applicationName/versions',auth.application.hasAuthorizationByApiKey,versions.createApi)
-
+  app.post('/api/firmware',auth.requireUserApiLogin,apis.createFirmwares)
   /**
    * Error handling
    */

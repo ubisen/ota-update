@@ -1,0 +1,56 @@
+{% extends '../layouts/default.html' %}
+
+{% block main %}
+  <h1>{{ firmware.name }}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+      {%
+      set port = ':' + req.app.settings.port
+      %}
+      {%if port == 80 || port ==443 %}
+        set port = ''
+      {%endif%}
+      
+        <strong>URI: </strong> <a href="{{req.protocol + '://' + req.hostname +  port + '/firmwares/' + firmware._id + '/download' }}">{{req.protocol + '://' + req.hostname +  port + '/firmwares/' + firmware._id + '/download' }}</a>
+      </div>
+      <p>{{ firmware.description }}</p>
+      <div class="meta">
+        {% if (firmware.user) %}
+          Author: &nbsp;
+          <a href="{{ '/users/' + firmware.user._id }}">
+            {{ firmware.user.name || firmware.user.username }}
+          </a>
+        {% endif %}
+        {% if (firmware.tags) %}
+          <p>
+            Tags: &nbsp;
+            {% for tag in firmware.tags.split(',') %}
+              <i class="muted fa fa-tag"></i>&nbsp;
+              <a href="{{ '/tags/' + tag }}" class="tag">{{ tag }}</a>
+              &nbsp;&nbsp;
+            {% endfor %}
+          </p>
+        {% endif %}
+        <span class="muted">{{ firmware.createdAt.toISOString()|date('M d, Y  h:m a') }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <form action="{{ '/firmwares/' + firmware.id }}" method="post" onsubmit="return confirm('Are you sure?')">
+    <br>
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <a href="{{ '/firmwares/' + firmware._id + '/edit' }}" title="edit" class="btn btn-default">
+      Edit
+    </a>
+    &nbsp;
+    <input type="hidden" name="_method" value="DELETE">
+    <a href="{{ '/firmwares/' + firmware._id + '/download' }}" class="btn btn-primary">Download</a>
+    &nbsp;
+    <button class="btn btn-danger" type="submit">Delete</button>
+  </form> 
+{% endblock %}

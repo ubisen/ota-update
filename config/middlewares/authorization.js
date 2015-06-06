@@ -53,6 +53,19 @@ exports.loadApplicationByApiKeyByName = function (req, res, next, name) {
       });
     });
 }
+exports.requireUserApiLogin = function (req, res, next) {
+  if(!req.headers["api-key"])
+      return res.status(401).send({
+        errors:["Authenticate fail!User Api-key required"]
+      });
+  User.findOne({ apiKey : req.headers["api-key"] },function (err,user) {
+    if(err) return res.status(500).send({errors:["Server errors"]});
+    if(!user)
+      return res.status(401).send({errors:["Authenticate fail!User Api-key invalid"]});
+    req.user = user;
+    next();
+  });
+}
 /*
  *  User authorization routing middleware
  */

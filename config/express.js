@@ -21,6 +21,7 @@ var winston = require('winston');
 var helpers = require('view-helpers');
 var config = require('config');
 var pkg = require('../package.json');
+var busboyBodyParser = require('busboy-body-parser');
 
 var env = process.env.NODE_ENV || 'development';
 
@@ -78,6 +79,7 @@ module.exports = function (app, passport) {
   // bodyParser should be above methodOverride
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(busboyBodyParser({ limit: '1mb' }));
   app.use(multer());
   app.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
