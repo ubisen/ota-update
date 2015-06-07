@@ -8,12 +8,14 @@ var LocalStrategy = require('passport-local').Strategy;
 var User = mongoose.model('User');
 
 var local = require('./passport/local');
+/*
 var bearer = require('./passport/bearer');
 var google = require('./passport/google');
 var facebook = require('./passport/facebook');
 var twitter = require('./passport/twitter');
 var linkedin = require('./passport/linkedin');
 var github = require('./passport/github');
+*/
 
 /**
  * Expose
