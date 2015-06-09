@@ -14,8 +14,8 @@ When bootup, OTA client polls for latest informations of firmware of an applicat
         api-key: "Api-key of your device or your user Api-key"
 
 ####By default: 
-    `image` Parameter instead of `image1` or `image2`.
-    `application` Parameter is application name
+- `image` Parameter instead of `image1` or `image2`.
+- `application` Parameter is application name
 
 OTA server should return information of last version, which contain metadata of the latest, including parsed URL to get user1/user2.bin.
 
@@ -93,3 +93,18 @@ return
     }
 
 Then the returned ```url``` use to register new version.
+
+## Run project
+
+### Install
+Rename `/config/env/env.example.json` to `/config/env/env.json` or create `env.json` file in `/config/env/` with your oauth config.
+
+    npm install
+
+### Run
+    
+    npm start
+
+### Test
+
+    npm test
