@@ -123,6 +123,19 @@ exports.device = {
     // });
   }
 }
+/*
+ *  Device authorization routing middleware
+ */
+
+exports.firmware = {
+  hasAuthorization: function (req, res, next) {
+    if (req.firmware.user.id != req.user.id) {
+      req.flash('info', 'You are not authorized')
+      return res.redirect('/firmwares/' + req.firmware.id)
+    }
+    next()
+  }
+}
 
 /**
  * Comment authorization routing middleware

@@ -21,6 +21,7 @@ var auth = require('./middlewares/authorization');
  */
 
 var deviceAuth = [auth.requiresLogin, auth.device.hasAuthorization];
+var firmwareAuth = [auth.requiresLogin, auth.firmware.hasAuthorization];
 var commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 var userAuth = [auth.requiresLogin, auth.user.hasAuthorization];
 var applicationAuth = [auth.requiresLogin, auth.application.hasAuthorization];
@@ -113,14 +114,14 @@ module.exports = function (app, passport) {
   app.delete('/devices/:deviceId', deviceAuth, devices.destroy);
   // firmware routes
   app.param('firmwareId', firmwares.load);
-  app.get('/firmwares', firmwares.index);
-  app.get('/firmwares/new', firmwares.new);
-  app.post('/firmwares',  firmwares.create);
-  app.get('/firmwares/:firmwareId/download', firmwares.download);
-  app.get('/firmwares/:firmwareId', firmwares.show);
-  app.get('/firmwares/:firmwareId/edit', firmwares.edit);
-  app.put('/firmwares/:firmwareId', firmwares.update);
-  app.delete('/firmwares/:firmwareId', firmwares.destroy);
+  app.get('/firmwares',auth.requiresLogin, firmwares.index);
+  app.get('/firmwares/new',auth.requiresLogin, firmwares.new);
+  app.post('/firmwares', auth.requiresLogin, firmwares.create);
+  app.get('/firmwares/:firmwareId/download',firmwareAuth, firmwares.download);
+  app.get('/firmwares/:firmwareId',firmwareAuth, firmwares.show);
+  app.get('/firmwares/:firmwareId/edit',firmwareAuth, firmwares.edit);
+  app.put('/firmwares/:firmwareId',firmwareAuth, firmwares.update);
+  app.delete('/firmwares/:firmwareId',firmwareAuth, firmwares.destroy);
 
   // home route
   app.get('/', homes.index);
